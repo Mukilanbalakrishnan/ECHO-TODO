@@ -1,0 +1,88 @@
+import type { Task } from '../types';
+import { v4 as uuidv4 } from 'uuid';
+import { addDays, subDays } from 'date-fns';
+
+const now = new Date();
+
+export const initialMockTasks: Task[] = [
+  {
+    id: uuidv4(),
+    title: 'Complete project documentation',
+    description: 'Prepare and finalize the project documentation for the new task management application.',
+    startTime: subDays(now, 1).toISOString(),
+    endTime: addDays(now, 2).toISOString(),
+    priority: 'High',
+    status: 'In Progress',
+    createdAt: subDays(now, 2).toISOString(),
+  },
+  {
+    id: uuidv4(),
+    title: 'Review client requirements',
+    description: 'Go through the latest feedback from the client and update the task list accordingly.',
+    startTime: new Date().toISOString(),
+    endTime: addDays(now, 1).toISOString(),
+    priority: 'Urgent',
+    status: 'Pending',
+    createdAt: subDays(now, 1).toISOString(),
+  },
+  {
+    id: uuidv4(),
+    title: 'Submit internship application',
+    description: 'Update resume and cover letter, then submit to the portal.',
+    startTime: undefined,
+    endTime: addDays(now, 3).toISOString(),
+    priority: 'High',
+    status: 'Pending',
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: uuidv4(),
+    title: 'Update portfolio',
+    description: 'Add the new React project to the portfolio website with screenshots and a live link.',
+    startTime: addDays(now, 1).toISOString(),
+    endTime: addDays(now, 5).toISOString(),
+    priority: 'Medium',
+    status: 'Pending',
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: uuidv4(),
+    title: 'Team meeting',
+    description: 'Weekly sync with the design and engineering team to discuss progress.',
+    startTime: addDays(now, 2).toISOString(),
+    endTime: addDays(now, 2).toISOString(),
+    priority: 'Medium',
+    status: 'Pending',
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: uuidv4(),
+    title: 'Complete UI design',
+    description: 'Finish the Figma mockups for the dashboard and settings pages.',
+    startTime: subDays(now, 5).toISOString(),
+    endTime: subDays(now, 2).toISOString(),
+    priority: 'High',
+    status: 'Completed',
+    createdAt: subDays(now, 6).toISOString(),
+  },
+  {
+    id: uuidv4(),
+    title: 'Review pull request',
+    description: 'Review the backend integration PR from Alex.',
+    startTime: subDays(now, 1).toISOString(),
+    endTime: new Date().toISOString(),
+    priority: 'Medium',
+    status: 'Completed',
+    createdAt: subDays(now, 2).toISOString(),
+  },
+  {
+    id: uuidv4(),
+    title: 'Prepare presentation',
+    description: 'Create slides for the upcoming product launch.',
+    startTime: addDays(now, 3).toISOString(),
+    endTime: addDays(now, 7).toISOString(),
+    priority: 'Low',
+    status: 'Pending',
+    createdAt: new Date().toISOString(),
+  },
+];
