@@ -126,6 +126,68 @@ app.delete('/api/tasks/:id', async (req, res) => {
   }
 });
 
+// Offer Letters CRUD
+app.get('/api/offer-letters', async (req, res) => {
+  try {
+    const offerLetters = await prisma.offerLetter.findMany({
+      orderBy: { createdAt: 'desc' }
+    });
+    res.json(offerLetters);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch offer letters' });
+  }
+});
+
+app.post('/api/offer-letters', async (req, res) => {
+  try {
+    const data = { ...req.body };
+    if (!data.userId) {
+      const firstUser = await prisma.user.findFirst();
+      if (!firstUser) throw new Error("No users exist in DB");
+      data.userId = firstUser.id;
+    }
+    
+    const offerLetter = await prisma.offerLetter.create({
+      data
+    });
+    res.json(offerLetter);
+  } catch (error) {
+    console.error("Offer Letter creation failed:", error);
+    res.status(500).json({ error: 'Failed to create offer letter', details: String(error) });
+  }
+});
+
+app.put('/api/offer-letters/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const data = { ...req.body };
+    delete data.id;
+    delete data.createdAt;
+    delete data.updatedAt;
+    delete data.userId;
+    
+    const offerLetter = await prisma.offerLetter.update({
+      where: { id },
+      data
+    });
+    res.json(offerLetter);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to update offer letter' });
+  }
+});
+
+app.delete('/api/offer-letters/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    await prisma.offerLetter.delete({
+      where: { id }
+    });
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to delete offer letter' });
+  }
+});
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
