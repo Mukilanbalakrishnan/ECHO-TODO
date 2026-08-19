@@ -1,0 +1,1 @@
+const { PrismaClient } = require('@prisma/client'); const prisma = new PrismaClient(); prisma.taskFollowUp.findMany({ orderBy: { createdAt: 'desc' }, take: 3 }).then(console.log).finally(() => process.exit(0));

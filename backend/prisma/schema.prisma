@@ -27,6 +27,7 @@ model Task {
   endTime     DateTime?
   userId      String
   user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  followUps   TaskFollowUp[]
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 }
@@ -45,4 +46,13 @@ model OfferLetter {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+}
+
+model TaskFollowUp {
+  id        String   @id @default(uuid())
+  content   String
+  reminderTime DateTime?
+  taskId    String
+  task      Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
 }

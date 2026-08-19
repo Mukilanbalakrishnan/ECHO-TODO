@@ -67,7 +67,8 @@ app.post('/api/auth/login', async (req, res) => {
 app.get('/api/tasks', async (req, res) => {
   try {
     const tasks = await prisma.task.findMany({
-      orderBy: { createdAt: 'desc' }
+      orderBy: { createdAt: 'desc' },
+      include: { followUps: { orderBy: { createdAt: 'asc' } } }
     });
     res.json(tasks);
   } catch (error) {
@@ -92,6 +93,18 @@ app.post('/api/tasks', async (req, res) => {
   } catch (error) {
     console.error("Task creation failed:", error);
     res.status(500).json({ error: 'Failed to create task', details: String(error) });
+  }
+});
+
+app.post('/api/tasks/:id/follow-ups', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { content, reminderTime } = req.body;
+    if (!content) return res.status(400).json({ error: 'Content is required' });
+    const followUp = await prisma.taskFollowUp.create({ data: { content, taskId: id, reminderTime: reminderTime ? new Date(reminderTime) : null } });
+    res.json(followUp);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed' });
   }
 });
 
