@@ -1,25 +1,22 @@
-import React, { useState, useRef } from 'react';
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
+import React, { useState, useEffect } from 'react';
 import { Modal } from '../common/Modal';
 import { Input } from '../common/Input';
 import { Button } from '../common/Button';
 import type { OfferLetterData } from './types';
-import { OfferLetterTemplate } from './OfferLetterTemplate';
+
 import { useToast } from '../../contexts/ToastContext';
 
 interface OfferLetterModalProps {
   isOpen: boolean;
   onClose: () => void;
+  initialData?: OfferLetterData;
+  onSubmit: (data: OfferLetterData) => Promise<boolean>;
 }
 
-export const OfferLetterModal: React.FC<OfferLetterModalProps> = ({ isOpen, onClose }) => {
+export const OfferLetterModal: React.FC<OfferLetterModalProps> = ({ isOpen, onClose, initialData, onSubmit }) => {
   const { toast } = useToast();
   const [isGenerating, setIsGenerating] = useState(false);
-  const templateRef = useRef<HTMLDivElement>(null);
-
-  // Form State
-  const [formData, setFormData] = useState<OfferLetterData>({
+  const defaultData: OfferLetterData = {
     name: '',
     position: 'Intern',
     startDate: '',
@@ -28,7 +25,16 @@ export const OfferLetterModal: React.FC<OfferLetterModalProps> = ({ isOpen, onCl
     stipend: 'Based on performance',
     location: 'KSR College of Technology, Namakkal',
     workingHours: '9:00 A.M - 5:00 P.M'
-  });
+  };
+
+  const [formData, setFormData] = useState<OfferLetterData>(initialData || defaultData);
+
+  useEffect(() => {
+    if (isOpen) {
+      setFormData(initialData || defaultData);
+      setErrors({});
+    }
+  }, [isOpen, initialData]);
 
   const [errors, setErrors] = useState<Partial<Record<keyof OfferLetterData, string>>>({});
 
@@ -57,59 +63,26 @@ export const OfferLetterModal: React.FC<OfferLetterModalProps> = ({ isOpen, onCl
     return Object.keys(newErrors).length === 0;
   };
 
-  const generatePDF = async () => {
+  const handleSubmit = async () => {
     if (!validate()) return;
-    
-    if (!templateRef.current) {
-      toast('Template reference not found', 'error');
-      return;
-    }
-
     setIsGenerating(true);
-    toast('Generating Offer Letter...', 'info');
-
     try {
-      // Temporarily make the template visible for html2canvas to capture it accurately
-      const element = templateRef.current;
-      element.style.display = 'block';
-      element.style.position = 'absolute';
-      element.style.top = '-9999px';
-      element.style.left = '-9999px';
-
-      const canvas = await html2canvas(element, {
-        scale: 2, // Higher quality
-        useCORS: true,
-        logging: false,
-        backgroundColor: '#ffffff'
-      });
-      
-      element.style.display = 'none'; // Hide it again
-
-      const imgData = canvas.toDataURL('image/png');
-      
-      // A4 size: 210 x 297 mm
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-      
-      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-      
-      const fileName = `Offer_Letter_${formData.name.replace(/\s+/g, '_')}.pdf`;
-      pdf.save(fileName);
-      
-      toast(`Offer Letter for ${formData.name} generated successfully!`, 'success');
-      onClose();
+      const success = await onSubmit(formData);
+      if (success) {
+        toast(`Offer Letter ${initialData ? 'updated' : 'created'} successfully!`, 'success');
+        onClose();
+      } else {
+        toast('Failed to save offer letter', 'error');
+      }
     } catch (error) {
-      console.error('Error generating PDF:', error);
-      toast('Failed to generate Offer Letter', 'error');
+      toast('Failed to save offer letter', 'error');
     } finally {
       setIsGenerating(false);
     }
   };
 
   return (
-    <>
-      <Modal isOpen={isOpen} onClose={onClose} title="Generate Offer Letter" maxWidth="xl">
+    <Modal isOpen={isOpen} onClose={onClose} title={initialData ? "Edit Offer Letter" : "Create Offer Letter"} maxWidth="xl">
         <div className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Input
@@ -184,19 +157,11 @@ export const OfferLetterModal: React.FC<OfferLetterModalProps> = ({ isOpen, onCl
             <Button variant="ghost" onClick={onClose} disabled={isGenerating}>
               Cancel
             </Button>
-            <Button onClick={generatePDF} isLoading={isGenerating}>
-              Generate & Download PDF
+            <Button onClick={handleSubmit} isLoading={isGenerating}>
+              {initialData ? 'Save Changes' : 'Create Offer Letter'}
             </Button>
           </div>
         </div>
       </Modal>
-
-      {/* Hidden template for PDF generation */}
-      <div style={{ display: 'none' }}>
-        <div ref={templateRef}>
-          <OfferLetterTemplate data={formData} />
-        </div>
-      </div>
-    </>
   );
 };

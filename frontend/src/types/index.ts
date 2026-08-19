@@ -17,3 +17,16 @@ export interface User {
   username: string;
   name: string;
 }
+
+export interface OfferLetter {
+  id: string;
+  name: string;
+  position: string;
+  startDate: string;
+  endDate: string;
+  domain: string;
+  stipend: string;
+  location: string;
+  workingHours: string;
+  createdAt: string;
+}

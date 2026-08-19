@@ -43,29 +43,23 @@ export const OfferLetterTemplate: React.FC<OfferLetterTemplateProps> = ({ data }
           {/* Base white */}
           <rect width="794" height="180" fill="#ffffff" />
           
-          {/* Orange accent polygon */}
-          <polygon points="0,0 794,0 794,180 0,180" fill="#ffffff" />
-          <polygon points="350,180 794,180 794,150 450,150" fill="#f58a28" />
-          <polygon points="450,150 250,0 200,0 350,180" fill="#f58a28" />
+          {/* Main Orange Chevron and Bar */}
+          <polygon points="386.7,30 436.7,75 420,90 487,150 794,150 794,180 420,180 320,90" fill="#f58a28" />
+
+          {/* Top Right Dark Blue Shape */}
+          <polygon points="386.7,30 420,0 520,0 436.7,75" fill="#1b2a47" />
           
           {/* Navy blue main polygon */}
-          <polygon points="0,0 380,0 250,180 0,180" fill="#1b2a47" />
+          <polygon points="0,0 380,0 280,90 380,180 0,180" fill="#1b2a47" />
         </svg>
 
         {/* Logo */}
         <div className="absolute top-10 right-10 flex items-center">
-          <div className="flex items-center gap-1">
-            <svg width="45" height="55" viewBox="0 0 50 60">
-              <path d="M40 10 H20 A10 10 0 0 0 10 20 V40 A10 10 0 0 0 20 50 H40" fill="none" stroke="#1b2a47" strokeWidth="8" strokeLinecap="round" />
-              <path d="M15 30 H35" fill="none" stroke="#1b2a47" strokeWidth="8" strokeLinecap="round" />
-              <polygon points="30,22 42,30 30,38" fill="#f58a28" />
-            </svg>
-            <div className="flex flex-col justify-center ml-1">
-              <span className="font-black text-[16px] leading-tight tracking-wide" style={{ color: '#1b2a47' }}>CHO DIGITAL</span>
-              <span className="font-black text-[16px] leading-tight tracking-wide" style={{ color: '#1b2a47' }}>WORKS</span>
-              <span className="text-[6px] tracking-widest mt-0.5 font-bold" style={{ color: '#1b2a47' }}>WHAT WE BUILD TODAY, ECHOES TOMORROW</span>
-            </div>
-          </div>
+          <img 
+            src="/logo (1).png" 
+            alt="Echo Digital Works Logo" 
+            className="h-[80px] w-auto object-contain" 
+          />
         </div>
       </div>
 
@@ -105,17 +99,31 @@ export const OfferLetterTemplate: React.FC<OfferLetterTemplateProps> = ({ data }
           <p>Echo Digital Works.</p>
         </div>
 
-        {/* Signature */}
-        <div className="mt-8 mb-2">
-          <svg width="200" height="60" viewBox="0 0 200 60">
-            <path d="M30 50 C 30 10, 45 5, 55 45 C 60 55, 65 30, 75 30 C 80 30, 85 45, 95 45 C 105 45, 115 35, 125 35 C 140 35, 160 45, 180 30" fill="none" stroke="#1a1a1a" strokeWidth="2" />
-            <path d="M45 40 L 190 35" fill="none" stroke="#1a1a1a" strokeWidth="1" strokeOpacity="0.5" />
-          </svg>
-        </div>
-        
-        <div className="font-bold text-[16px]">
-          <p>Boopathy,</p>
-          <p className="font-normal italic">Founder</p>
+        {/* Signature and Seal Area */}
+        <div className="mt-8 flex justify-between items-end">
+          {/* Signature */}
+          <div>
+            <div className="mb-2">
+              <img 
+                src="/CEO-Signature.png" 
+                alt="Signature" 
+                className="h-[80px] w-auto object-contain object-left" 
+              />
+            </div>
+            <div className="font-bold text-[16px] ml-4">
+              <p>Boopathy,</p>
+              <p className="font-normal italic">Founder</p>
+            </div>
+          </div>
+
+          {/* Seal */}
+          <div className="mb-2">
+            <img 
+              src="/echo digital seal.png" 
+              alt="Company Seal" 
+              className="w-[120px] object-contain" 
+            />
+          </div>
         </div>
       </div>
 
