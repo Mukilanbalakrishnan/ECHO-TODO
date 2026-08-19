@@ -5,7 +5,7 @@ import { useNotifications } from './useNotifications';
 export const useTasks = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
-  const { scheduleTaskReminder, cancelTaskReminder } = useNotifications();
+  const { scheduleTaskReminder, cancelTaskReminder, scheduleFollowUpReminder } = useNotifications();
 
   const fetchTasks = async () => {
     try {
@@ -112,12 +112,43 @@ export const useTasks = () => {
     }
   };
 
+  const addFollowUp = async (task: Task, content: string, reminderTime?: string) => {
+    try {
+      const API_URL = import.meta.env.VITE_API_URL || '';
+      const response = await fetch(`${API_URL}/api/tasks/${task.id}/follow-ups`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content, reminderTime })
+      });
+      
+      if (response.ok) {
+        const newFollowUp = await response.json();
+        setTasks((prev) =>
+          prev.map((t) =>
+            t.id === task.id
+              ? { ...t, followUps: [...(t.followUps || []), newFollowUp] }
+              : t
+          )
+        );
+        if (newFollowUp.reminderTime) {
+          scheduleFollowUpReminder(newFollowUp, task.title);
+        }
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error('Failed to add follow-up:', error);
+      return false;
+    }
+  };
+
   return {
     tasks,
     addTask,
     updateTask,
     deleteTask,
     toggleTaskCompletion,
+    addFollowUp,
     isLoaded,
   };
 };

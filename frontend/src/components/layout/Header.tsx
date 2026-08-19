@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Bell, Search, Menu } from 'lucide-react';
 import type { User } from '../../types';
 
@@ -10,6 +10,8 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({ user, onOpenSidebar, title = 'To-Do', subtitle = 'Manage and organize your tasks' }) => {
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+
   return (
     <header className="flex h-16 items-center justify-between bg-white px-4 sm:px-8 border-b border-slate-200">
       <div className="flex items-center gap-4">
@@ -35,10 +37,44 @@ export const Header: React.FC<HeaderProps> = ({ user, onOpenSidebar, title = 'To
           />
         </div>
 
-        <button className="relative p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full transition-colors">
-          <Bell size={20} />
-          <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-red-500 border-2 border-white"></span>
-        </button>
+        <div className="relative">
+          <button 
+            onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
+            className="relative p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full transition-colors"
+          >
+            <Bell size={20} />
+            {/* Red dot indicating new notifications */}
+            <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-red-500 border-2 border-white"></span>
+          </button>
+          
+          {isNotificationsOpen && (
+            <>
+              {/* Invisible overlay to close dropdown when clicking outside */}
+              <div 
+                className="fixed inset-0 z-40" 
+                onClick={() => setIsNotificationsOpen(false)} 
+              />
+              <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-slate-200 z-50 overflow-hidden">
+                <div className="p-4 border-b border-slate-100 flex justify-between items-center">
+                  <h3 className="font-semibold text-slate-800">Notifications</h3>
+                  <span 
+                    className="text-xs text-indigo-600 font-medium cursor-pointer hover:text-indigo-800"
+                    onClick={() => setIsNotificationsOpen(false)}
+                  >
+                    Mark all as read
+                  </span>
+                </div>
+                <div className="max-h-80 overflow-y-auto">
+                  <div className="p-8 text-center text-slate-500 flex flex-col items-center">
+                    <Bell size={32} className="text-slate-300 mb-3" />
+                    <p className="text-sm font-medium text-slate-600">You're all caught up!</p>
+                    <p className="text-xs text-slate-400 mt-1">Check back later for new updates.</p>
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
+        </div>
 
         <div className="h-6 w-px bg-slate-200 mx-1"></div>
 

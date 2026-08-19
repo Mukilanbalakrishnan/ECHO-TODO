@@ -12,12 +12,13 @@ import { Button } from '../components/common/Button';
 import { Plus } from 'lucide-react';
 
 export const Todo: React.FC = () => {
-  const { tasks, addTask, updateTask, deleteTask, toggleTaskCompletion } = useTasks();
+  const { tasks, addTask, updateTask, deleteTask, toggleTaskCompletion, addFollowUp } = useTasks();
   const { toast } = useToast();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
-  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
+  const selectedTask = useMemo(() => tasks.find((t) => t.id === selectedTaskId) || null, [tasks, selectedTaskId]);
   const [taskToEdit, setTaskToEdit] = useState<Task | null>(null);
 
   const [filters, setFilters] = useState<FilterState>({
@@ -142,7 +143,7 @@ export const Todo: React.FC = () => {
 
       <TaskList
         tasks={filteredAndSortedTasks}
-        onView={(task) => { setSelectedTask(task); setIsDetailsOpen(true); }}
+        onView={(task) => { setSelectedTaskId(task.id); setIsDetailsOpen(true); }}
         onEdit={handleEditTask}
         onDelete={handleDeleteTask}
         onToggleComplete={handleToggleComplete}
@@ -158,9 +159,10 @@ export const Todo: React.FC = () => {
 
       <TaskDetails
         isOpen={isDetailsOpen}
-        onClose={() => setIsDetailsOpen(false)}
+        onClose={() => { setIsDetailsOpen(false); setSelectedTaskId(null); }}
         task={selectedTask}
         onEdit={() => selectedTask && handleEditTask(selectedTask)}
+        onAddFollowUp={addFollowUp}
       />
     </div>
   );

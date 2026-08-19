@@ -1,6 +1,14 @@
 export type Priority = 'Low' | 'Medium' | 'High' | 'Urgent';
 export type Status = 'Pending' | 'In Progress' | 'Completed';
 
+export interface TaskFollowUp {
+  id: string;
+  content: string;
+  taskId: string;
+  createdAt: string;
+  reminderTime?: string;
+}
+
 export interface Task {
   id: string;
   title: string;
@@ -10,6 +18,7 @@ export interface Task {
   priority: Priority;
   status: Status;
   createdAt: string;
+  followUps?: TaskFollowUp[];
 }
 
 export interface User {

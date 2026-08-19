@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { CheckCircle2, XCircle, Info, X } from 'lucide-react';
@@ -33,6 +33,17 @@ export const ToastProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   const removeToast = (id: string) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
   };
+
+  useEffect(() => {
+    const handleAppNotification = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      if (customEvent.detail && customEvent.detail.message) {
+        toast(customEvent.detail.message, customEvent.detail.type || 'info');
+      }
+    };
+    window.addEventListener('app-notification', handleAppNotification);
+    return () => window.removeEventListener('app-notification', handleAppNotification);
+  }, [toast]);
 
   return (
     <ToastContext.Provider value={{ toast }}>
