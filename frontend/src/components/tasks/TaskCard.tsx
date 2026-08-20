@@ -97,7 +97,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({
       exit={{ opacity: 0, scale: 0.95 }}
       whileHover={{ y: -2 }}
       className={cn(
-        'group relative rounded-xl border bg-white p-4 shadow-sm transition-all hover:shadow-md flex items-center gap-4',
+        'group relative rounded-xl border bg-white p-4 shadow-sm transition-all hover:shadow-md flex flex-wrap sm:flex-nowrap items-center gap-y-3 gap-x-4',
         isCompleted ? 'border-slate-200 bg-slate-50/50' : 'border-slate-200',
         task.priority === 'Urgent' && !isCompleted ? 'border-red-200 shadow-red-100/50' : ''
       )}
@@ -118,7 +118,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({
       </div>
 
       {/* Main Content: Title & Desc */}
-      <div className="flex-1 min-w-0 pr-4">
+      <div className="flex-1 min-w-0 sm:pr-4">
         <h3
           className={cn(
             'text-sm font-semibold truncate transition-colors mb-0.5',
@@ -137,8 +137,33 @@ export const TaskCard: React.FC<TaskCardProps> = ({
         </p>
       </div>
 
+      {/* Mobile Actions (Always visible, inline with title) */}
+      <div className="flex sm:hidden items-center gap-2 shrink-0 ml-auto">
+        <button
+          onClick={() => onView(task)}
+          className="p-1.5 text-slate-400 hover:text-indigo-600 bg-slate-50 hover:bg-indigo-50 rounded-md transition-colors"
+        >
+          <Eye size={16} />
+        </button>
+        <button
+          onClick={() => onEdit(task)}
+          className="p-1.5 text-slate-400 hover:text-blue-600 bg-slate-50 hover:bg-blue-50 rounded-md transition-colors"
+        >
+          <Edit2 size={16} />
+        </button>
+        <button
+          onClick={() => onDelete(task)}
+          className="p-1.5 text-slate-400 hover:text-red-600 bg-slate-50 hover:bg-red-50 rounded-md transition-colors"
+        >
+          <Trash2 size={16} />
+        </button>
+      </div>
+
+      {/* Mobile Line Break */}
+      <div className="w-full sm:hidden" />
+
       {/* Dates */}
-      <div className="hidden md:flex flex-col gap-1 w-28 shrink-0 text-[11px] text-slate-500">
+      <div className="flex sm:hidden md:flex flex-col gap-1 w-auto sm:w-28 shrink-0 text-[11px] text-slate-500 pl-9 sm:pl-0 mr-4 sm:mr-0">
         {task.startTime && (
           <div className="flex items-center gap-1.5 truncate" title={`Start: ${format(parseISO(task.startTime), 'MMM d, yyyy h:mm a')}`}>
             <Clock size={12} className="text-slate-400 shrink-0" />
@@ -156,21 +181,21 @@ export const TaskCard: React.FC<TaskCardProps> = ({
       </div>
 
       {/* Priority */}
-      <div className="hidden sm:flex w-24 shrink-0 items-center justify-start">
+      <div className="flex w-auto sm:w-24 shrink-0 items-center justify-start mr-4 sm:mr-0">
         <Badge variant={task.priority} className="text-[11px]">
           {task.priority}
         </Badge>
       </div>
 
       {/* Status */}
-      <div className="hidden sm:flex w-24 shrink-0 items-center justify-start">
+      <div className="flex w-auto sm:w-24 shrink-0 items-center justify-start">
         <Badge variant={task.status} className="text-[11px]">
           {task.status}
         </Badge>
       </div>
 
-      {/* Actions */}
-      <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity w-24 shrink-0 justify-end">
+      {/* Desktop Actions */}
+      <div className="hidden sm:flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity w-24 shrink-0 justify-end">
         <button
           onClick={() => onView(task)}
           className="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-md transition-colors"

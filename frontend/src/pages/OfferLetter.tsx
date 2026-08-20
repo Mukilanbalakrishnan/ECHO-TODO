@@ -121,70 +121,65 @@ export const OfferLetter: React.FC = () => {
           </Button>
         </div>
       ) : (
-        <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm text-slate-600">
-              <thead className="bg-slate-50 text-slate-800 border-b border-slate-200">
-                <tr>
-                  <th className="px-6 py-4 font-semibold">Candidate</th>
-                  <th className="px-6 py-4 font-semibold">Position</th>
-                  <th className="px-6 py-4 font-semibold">Domain</th>
-                  <th className="px-6 py-4 font-semibold">Date Created</th>
-                  <th className="px-6 py-4 font-semibold text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                {offerLetters.map((letter) => (
-                  <tr key={letter.id} className="hover:bg-slate-50 transition-colors">
-                    <td className="px-6 py-4 font-medium text-slate-800">{letter.name}</td>
-                    <td className="px-6 py-4">{letter.position}</td>
-                    <td className="px-6 py-4">{letter.domain}</td>
-                    <td className="px-6 py-4">
-                      {letter.createdAt ? format(parseISO(letter.createdAt), 'MMM d, yyyy') : '-'}
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex justify-end gap-2">
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
-                          onClick={() => setPreviewLetter(letter)}
-                          className="text-slate-600 hover:text-indigo-600 hover:bg-indigo-50"
-                          title="Preview"
-                        >
-                          <Eye size={16} />
-                        </Button>
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
-                          onClick={() => handleDownload(letter)}
-                          isLoading={isGenerating === letter.id}
-                          className="text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50"
-                        >
-                          <Download size={16} />
-                        </Button>
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
-                          onClick={() => handleOpenEdit(letter)}
-                          className="text-slate-600 hover:text-indigo-600"
-                        >
-                          <Edit2 size={16} />
-                        </Button>
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
-                          onClick={() => handleDelete(letter.id)}
-                          className="text-slate-600 hover:text-red-600"
-                        >
-                          <Trash2 size={16} />
-                        </Button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {offerLetters.map((letter) => (
+            <div key={letter.id} className="bg-white rounded-xl border border-slate-200 shadow-sm p-5 hover:shadow-md transition-all flex flex-col">
+              <div className="flex justify-between items-start mb-4">
+                <div className="min-w-0 pr-3">
+                  <h3 className="font-semibold text-slate-800 truncate">{letter.name}</h3>
+                  <p className="text-sm text-slate-500 mt-0.5 truncate">{letter.position}</p>
+                </div>
+                <div className="text-[10px] font-medium text-slate-500 bg-slate-100 px-2 py-1 rounded shrink-0">
+                  {letter.domain}
+                </div>
+              </div>
+              
+              <div className="text-xs text-slate-400 mb-4 flex-1">
+                Created on {letter.createdAt ? format(parseISO(letter.createdAt), 'MMM d, yyyy') : '-'}
+              </div>
+              
+              <div className="mt-auto pt-4 border-t border-slate-100 flex justify-between items-center">
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={() => setPreviewLetter(letter)} 
+                  className="text-slate-600 hover:text-indigo-600 px-2 -ml-2"
+                >
+                  <Eye size={16} className="mr-1.5" /> Preview
+                </Button>
+                <div className="flex gap-1 -mr-2">
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={() => handleDownload(letter)} 
+                    isLoading={isGenerating === letter.id} 
+                    className="text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50 px-2"
+                    title="Download PDF"
+                  >
+                    <Download size={16} />
+                  </Button>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={() => handleOpenEdit(letter)} 
+                    className="text-slate-600 hover:text-blue-600 hover:bg-blue-50 px-2"
+                    title="Edit"
+                  >
+                    <Edit2 size={16} />
+                  </Button>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={() => handleDelete(letter.id)} 
+                    className="text-slate-600 hover:text-red-600 hover:bg-red-50 px-2"
+                    title="Delete"
+                  >
+                    <Trash2 size={16} />
+                  </Button>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       )}
 

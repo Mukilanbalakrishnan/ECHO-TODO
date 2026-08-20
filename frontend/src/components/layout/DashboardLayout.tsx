@@ -72,7 +72,7 @@ export const DashboardLayout: React.FC = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.2 }}
-              className="h-full p-4 sm:p-8"
+              className="min-h-full p-4 sm:p-8"
             >
               <Outlet />
             </motion.div>

@@ -50,6 +50,14 @@ export const useTasks = () => {
     setTasks((prev) =>
       prev.map((task) => (task.id === updatedTask.id ? updatedTask : task))
     );
+    
+    // Reschedule notifications for the updated task
+    cancelTaskReminder(updatedTask.id).then(() => {
+      if (updatedTask.status !== 'Completed') {
+        scheduleTaskReminder(updatedTask);
+      }
+    });
+
     try {
       await fetch(`/api/tasks/${updatedTask.id}`, {
         method: 'PUT',

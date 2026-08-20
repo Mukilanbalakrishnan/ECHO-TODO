@@ -27,9 +27,22 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSave, t
       if (task) {
         setTitle(task.title);
         setDescription(task.description || '');
-        // format dates for input type="datetime-local" (YYYY-MM-DDTHH:mm)
-        setStartTime(task.startTime ? task.startTime.slice(0, 16) : '');
-        setEndTime(task.endTime ? task.endTime.slice(0, 16) : '');
+        // Format UTC dates back to local time string for datetime-local input
+        const toLocalInputFormat = (dateString?: string) => {
+          if (!dateString) return '';
+          try {
+            // Using standard JS Date methods to avoid date-fns import issues if not available at top level
+            const d = new Date(dateString);
+            if (isNaN(d.getTime())) return '';
+            const pad = (n: number) => n.toString().padStart(2, '0');
+            return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+          } catch {
+            return '';
+          }
+        };
+
+        setStartTime(toLocalInputFormat(task.startTime));
+        setEndTime(toLocalInputFormat(task.endTime));
         setPriority(task.priority);
         setStatus(task.status);
       } else {

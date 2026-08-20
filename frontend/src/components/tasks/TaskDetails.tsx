@@ -32,7 +32,11 @@ export const TaskDetails: React.FC<TaskDetailsProps> = ({ isOpen, onClose, task,
   const handleAddFollowUp = async () => {
     if (!newFollowUp.trim() || !onAddFollowUp) return;
     setIsSubmitting(true);
-    const success = await onAddFollowUp(task, newFollowUp.trim(), reminderTime || undefined);
+    
+    // Fix timezone shift by converting local datetime string to proper UTC ISO string
+    const finalReminderTime = reminderTime ? new Date(reminderTime).toISOString() : undefined;
+    
+    const success = await onAddFollowUp(task, newFollowUp.trim(), finalReminderTime);
     if (success) {
       setNewFollowUp('');
       setReminderTime('');
