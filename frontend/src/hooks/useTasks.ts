@@ -14,6 +14,16 @@ export const useTasks = () => {
       if (response.ok) {
         const data = await response.json();
         setTasks(data);
+        
+        // Sync local notifications for tasks created on other devices
+        data.forEach((task: Task) => {
+          if (task.status !== 'Completed') {
+            scheduleTaskReminder(task);
+            if (task.followUps) {
+              task.followUps.forEach((f) => scheduleFollowUpReminder(f, task.title));
+            }
+          }
+        });
       }
     } catch (error) {
       console.error('Failed to fetch tasks:', error);
