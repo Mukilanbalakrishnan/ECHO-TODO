@@ -69,7 +69,8 @@ export const useTasks = () => {
     });
 
     try {
-      await fetch(`/api/tasks/${updatedTask.id}`, {
+      const API_URL = import.meta.env.VITE_API_URL || '';
+      await fetch(`${API_URL}/api/tasks/${updatedTask.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedTask)
