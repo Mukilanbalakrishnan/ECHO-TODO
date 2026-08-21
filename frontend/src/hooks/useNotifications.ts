@@ -101,7 +101,9 @@ export const useNotifications = () => {
           await LocalNotifications.schedule({ notifications });
         }
       } catch (error: any) {
-        alert('Start Notification Error: ' + (error.message || 'Unknown error'));
+        if (Capacitor.isNativePlatform()) {
+          alert('Start Notification Error: ' + (error.message || 'Unknown error'));
+        }
         console.warn('Failed to schedule start time notification:', error);
       }
       
@@ -145,7 +147,9 @@ export const useNotifications = () => {
           await LocalNotifications.schedule({ notifications: endNotifications });
         }
       } catch (error: any) {
-        alert('End Notification Error: ' + (error.message || 'Unknown error'));
+        if (Capacitor.isNativePlatform()) {
+          alert('End Notification Error: ' + (error.message || 'Unknown error'));
+        }
         console.warn('Failed to schedule end time notification:', error);
       }
       
@@ -238,7 +242,9 @@ export const useNotifications = () => {
         await LocalNotifications.schedule({ notifications });
       }
     } catch (error: any) {
-      alert('Follow-Up Notification Error: ' + (error.message || 'Unknown error'));
+      if (Capacitor.isNativePlatform()) {
+        alert('Follow-Up Notification Error: ' + (error.message || 'Unknown error'));
+      }
       console.error('Failed to schedule follow-up notification:', error);
     }
     
