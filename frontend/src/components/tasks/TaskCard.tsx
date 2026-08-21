@@ -81,7 +81,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({
       }
       
       if (isOverdue) {
-        return `-${timeString}`;
+        return 'Due time completed';
       }
       return timeString;
     } catch {
